@@ -1,11 +1,24 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import datasets, linear_model
 
 window_name = 'orange ball tracker'
-remember_last_100= [[-1 for i in range(100)]for j in range(2)]
-print remember_last_100
+X_train= np.zeros(100)
+
+X_train=X_train.reshape((100,1))
+
+Y_train= np.zeros(100)
+Y_train=Y_train.reshape((100,1))
+
+print X_train.shape
+print Y_train.shape
+x=1
+
 
 def track(image):
+
+    global x
 
     hsv1 = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
@@ -26,11 +39,25 @@ def track(image):
         centroid_y = int(moments['m01']/m00)
 
     if centroid_x!=None and centroid_y!=None:
+            
+        X_train[x]=centroid_x
+        Y_train[x]=centroid_y
 
-        for x in range(100):
-            for y in range(2):
+        x=(x+1)%100
+
+        algo = linear_model.LinearRegression(fit_intercept=True,normalize=False)
+        algo.fit(X_train,Y_train)
+
+        coefficients = algo.coef_
+        #print coefficients
+        print centroid_x
+        print centroid_y
+        intercept = algo.intercept_
+
+
+
                 
-s
+
 
 
 if __name__ == '__main__':
