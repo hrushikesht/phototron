@@ -28,7 +28,9 @@ def track(image):
     mask = cv2.inRange(hsv1, lower_orange, upper_orange)
     bmask = cv2.GaussianBlur(mask, (5,5),0)
 
-    cv2.imshow(window_name,bmask)
+    #cv2.imshow(window_name,bmask)
+
+    bgr_test = image
 
     moments = cv2.moments(bmask)
     m00 = moments['m00']
@@ -48,11 +50,17 @@ def track(image):
         algo = linear_model.LinearRegression(fit_intercept=True,normalize=False)
         algo.fit(X_train,Y_train)
 
-        coefficients = algo.coef_
-        #print coefficients
-        print centroid_x
-        print centroid_y
+        slope = algo.coef_
         intercept = algo.intercept_
+
+        print "slope"
+        print slope
+        print "intercept"
+        print intercept
+
+        cv2.circle(bgr_test,(centroid_x,centroid_y), 5, (0,0,255), 2)
+        cv2.line(bgr_test,(0,intercept),(intercept/slope,0),(255,0,0),5)
+        cv2.imshow(window_name,bgr_test)
 
 
 
